@@ -8,9 +8,18 @@ function Book(title, author, pages, read) {
     this.read = read;
 }
 
+// function that toggles book's 'read' status on your Book prototype instance
+Book.prototype.toggleRead = function () {
+    if (this.read === true) {
+        this.read = false;
+    } else {
+        this.read = true;
+    }
+}
 
 
-// book constructor
+
+// construct books and add them to the library array
 function addBookToLibrary(new_book) {
     myLibrary.push(new_book)
 }
@@ -18,13 +27,27 @@ function addBookToLibrary(new_book) {
 // function that displays books as cards on the DOM
 // (we can change this function to display one book at a time instead of iterate through all)
 function displayBooks(array) {
+    const main = document.querySelector('.main')
+
+    // this segment of code loops through and removes all book cards from 
+    // the display
+    while (main.firstChild) {
+        main.removeChild(main.firstChild)
+    }
+    let i = 0;
     array.forEach(function (book) {
         const div = document.createElement('div');
 
         const p1 = document.createElement('p');
         const p2 = document.createElement('p');
         const p3 = document.createElement('p');
-        const p4 = document.createElement('p');
+        const p4 = document.createElement('button');
+
+        p4.setAttribute('class', 'toggle-read')
+
+        const del_button = document.createElement('button');
+        del_button.setAttribute('class', 'delete-button')
+        del_button.setAttribute('id', `delete-${i}`);
 
         p1.textContent = book.title;
         p2.textContent = book.author;
@@ -35,14 +58,19 @@ function displayBooks(array) {
         div.appendChild(p2)
         div.appendChild(p3)
         div.appendChild(p4)
+        div.appendChild(del_button);
 
         div.setAttribute('class', 'book-card')
+
+        div.setAttribute('id', `delete-${i}`)
+        i += 1;
         // div.textContent = `<p>${book.title}</p> <p>${book.author}</p> <p>${book.pages}</p> <p>${book.read}</p>`;
 
-        const main = document.querySelector('.main')
+
         main.appendChild(div)
 
     })
+
 }
 
 //MODAL POPUP BOX (to ask user for book input);
@@ -50,11 +78,8 @@ function displayBooks(array) {
 const button = document.querySelector('.button');
 const close_button = document.querySelector('.close-button');
 const submit_modal = document.querySelector('.modal-submit')
-// close_button.setAttribute('class', 'close_button');
-
 
 const dialog = document.querySelector('dialog');
-
 dialog.setAttribute('class', 'dialog-box');
 
 
@@ -68,10 +93,37 @@ close_button.addEventListener('click', () => {
     dialog.close();
 })
 
-//listener for submitting info we've typed into the Modal's form
-submit_modal.addEventListener('click', () => {
-    // Decide what to do when we submit the modal
+
+
+// EVENT LISTENER TO USED TO DELETE A CARD
+// 1) listen for clicks,
+// 2) When click happens, check if delete button (card) exists
+// 3) if card exists, delete card and also delete corresponding entry from myLibrary
+document.addEventListener('click', function (event) {
+    const clickedElementClass = event.target.classList
+
+    if (event.target.classList.contains('delete-button')) {
+        delete_card(event)
+    }
+
+    if (event.target.classList.contains('toggle-read')) {
+        console.log('Toggle clicked')
+        ///WE STOPPED HERE LASST TIME
+
+    }
 })
+
+function delete_card(event) {
+    let remove_id = event.target.id;
+
+    const element_remove = document.querySelector(`#${remove_id}`)
+    element_remove.remove()
+
+    let lastIndex = remove_id.length - 1;
+    let lastCharacter = remove_id[lastIndex];
+    myLibrary.splice(Number(lastCharacter), 1)
+
+}
 
 //listener for the form submission. Prevent default behavior and get submission info
 const myForm = document.getElementById('form');
@@ -82,35 +134,15 @@ myForm.addEventListener('submit', function (event) {
     const title = document.getElementById('title').value;
     const author = document.getElementById('author').value;
     const pages = document.getElementById('pages').value;
-    const read = document.getElementById('read').value;
-    // console.log(title)
-    // console.log(author)
-    // console.log(pages)
-    // console.log(read)
+
+    const checkbox = document.getElementById('read')
+    const read = checkbox.checked;
+    // const read = document.getElementById('read');
+
     addBookToLibrary(new Book(title, author, pages, read));
 
-    // FIX THIS LINE NEXT
-    // every time we submit the form, we're adding the entire library to the display
-    // ... we should only add the last entry to the display
-    displayBooks(myLibrary[myLibrary.length - 1]);
+    displayBooks(myLibrary);
     dialog.close();
 })
 
 
-
-
-
-
-
-// just testing
-// testing1 = new Book('book1', 'author1', 23, true);
-// testing2 = new Book('book2', 'author2', 23, true);
-// testing3 = new Book('book3', 'author3', 23, true);
-// testing4 = new Book('book4', 'author4', 23, true);
-// addBookToLibrary(testing1);
-// addBookToLibrary(testing2)
-// addBookToLibrary(testing3)
-// addBookToLibrary(testing4)
-
-displayBooks(myLibrary)
-// console.log(testing)
