@@ -17,6 +17,20 @@ Book.prototype.toggleRead = function () {
     }
 }
 
+// function to toggle the card display itself AFTER we've toggled the book in myLibrary
+function toggleReadCard(event) {
+    // 1) get the toggle id of the book we want to toggle
+    // 2) use that ID to find and change the book in myLibrary
+    // 3) repopulate the cards with the card's toggle changed
+    let toggle_id = event.target.id;
+    let lastIndex = toggle_id.length - 1;
+    let toggle_index = toggle_id[lastIndex]
+
+    myLibrary[toggle_index].toggleRead();
+
+    displayBooks(myLibrary);
+}
+
 
 
 // construct books and add them to the library array
@@ -44,6 +58,7 @@ function displayBooks(array) {
         const p4 = document.createElement('button');
 
         p4.setAttribute('class', 'toggle-read')
+        p4.setAttribute('id', `toggle-${i}`);
 
         const del_button = document.createElement('button');
         del_button.setAttribute('class', 'delete-button')
@@ -95,21 +110,22 @@ close_button.addEventListener('click', () => {
 
 
 
-// EVENT LISTENER TO USED TO DELETE A CARD
+// EVENT LISTENER TO USED TO DELETE A CARD OR TOGGLE READ STATUS
 // 1) listen for clicks,
 // 2) When click happens, check if delete button (card) exists
 // 3) if card exists, delete card and also delete corresponding entry from myLibrary
 document.addEventListener('click', function (event) {
-    const clickedElementClass = event.target.classList
+    // const clickedElementClass = event.target.classList
 
     if (event.target.classList.contains('delete-button')) {
         delete_card(event)
     }
 
+    // This part should listen for when user clicks the 'read' toggle, and change it
     if (event.target.classList.contains('toggle-read')) {
-        console.log('Toggle clicked')
-        ///WE STOPPED HERE LASST TIME
+        // console.log('Toggle clicked')
 
+        toggleReadCard(event)
     }
 })
 
@@ -123,6 +139,7 @@ function delete_card(event) {
     let lastCharacter = remove_id[lastIndex];
     myLibrary.splice(Number(lastCharacter), 1)
 
+    displayBooks(myLibrary)
 }
 
 //listener for the form submission. Prevent default behavior and get submission info
