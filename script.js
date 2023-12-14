@@ -57,17 +57,25 @@ function displayBooks(array) {
         const p3 = document.createElement('p');
         const p4 = document.createElement('button');
 
-        p4.setAttribute('class', 'toggle-read')
+        // p4.setAttribute('class', 'toggle-read')
         p4.setAttribute('id', `toggle-${i}`);
 
         const del_button = document.createElement('button');
-        del_button.setAttribute('class', 'delete-button')
+        del_button.textContent = 'Remove Book';
+        del_button.setAttribute('class', 'delete-button');
         del_button.setAttribute('id', `delete-${i}`);
 
         p1.textContent = book.title;
         p2.textContent = book.author;
         p3.textContent = book.pages;
-        p4.textContent = book.read;
+        if (book.read === true) {
+            p4.setAttribute('class', 'green-button')
+            p4.textContent = 'Read';
+        } else {
+            p4.setAttribute('class', 'red-button')
+            p4.textContent = 'Not Read'
+        }
+        // p4.textContent = book.read;
 
         div.appendChild(p1)
         div.appendChild(p2)
@@ -80,8 +88,6 @@ function displayBooks(array) {
         div.setAttribute('id', `delete-${i}`)
         i += 1;
         // div.textContent = `<p>${book.title}</p> <p>${book.author}</p> <p>${book.pages}</p> <p>${book.read}</p>`;
-
-
         main.appendChild(div)
 
     })
@@ -122,7 +128,7 @@ document.addEventListener('click', function (event) {
     }
 
     // This part should listen for when user clicks the 'read' toggle, and change it
-    if (event.target.classList.contains('toggle-read')) {
+    if (event.target.classList.contains('green-button') || event.target.classList.contains('red-button')) {
         // console.log('Toggle clicked')
 
         toggleReadCard(event)
