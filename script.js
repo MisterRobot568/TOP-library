@@ -1,12 +1,23 @@
 const myLibrary = [];
 
 // constructor for the book
-function Book(title, author, pages, read) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
+// function Book(title, author, pages, read) {
+//     this.title = title;
+//     this.author = author;
+//     this.pages = pages;
+//     this.read = read;
+// }
+// ################### change from constructor to class based ##########
+class Book {
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
+    }
 }
+// ####################################################
+
 
 // function that toggles book's 'read' status on your Book prototype instance
 Book.prototype.toggleRead = function () {
